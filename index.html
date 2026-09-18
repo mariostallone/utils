@@ -27,6 +27,23 @@
 @media(max-width:650px){.calendar-hint{align-items:flex-start;flex-direction:column;gap:4px}.selection-count{white-space:normal}.summary-card{padding:10px}.stat{min-width:145px}.range-tools{max-width:calc(100vw - 16px)}}
 .quick-ranges{margin:-3px 0 16px;color:var(--muted);font-size:12px}.quick-ranges>span{display:block;font-weight:700;margin-bottom:6px}.quick-ranges div{display:flex;gap:5px;flex-wrap:wrap}.quick-ranges button{background:#edf4f3;border-radius:7px;padding:6px 8px;font-size:11px}.quick-ranges button:hover{background:var(--accent-soft)}.check-field{display:flex;align-items:center;gap:7px;margin:-2px 0 16px;color:var(--muted);font-size:12px}.check-field input{accent-color:var(--accent)}.save-status{font-size:11px;color:var(--muted);margin:10px 2px 0}.save-status.unsaved{color:var(--holiday);font-weight:700}.actions .button:disabled{opacity:.45;cursor:not-allowed}.metric{background:#f6faf9}.print-only{display:none}@media print{.print-only{display:block}.quick-ranges,.check-field,.save-status{display:none}}
 :focus-visible{outline:3px solid #7acfc4;outline-offset:2px}.day.disabled:focus-visible{outline-color:#9ba8aa}.stat.metric strong{color:var(--accent)}
+.topbar{background:linear-gradient(135deg,#ffffff 0%,#f0f8f6 100%)}
+.controls{position:sticky;top:18px;align-self:start}
+.month{overflow:hidden;background:#fff;box-shadow:0 5px 16px #18303b0a}
+.month h2{margin:-11px -11px 10px;padding:10px 11px;background:#f4f9f8;border-bottom:1px solid var(--line);font-size:15px;letter-spacing:-.01em}
+.day.pto{background:var(--pto-soft);color:#155f58;border-color:#a9ddd5}
+.day.wfa{background:var(--wfa-soft);color:#854b0d;border-color:#edc78d}
+.day.paternal{background:var(--paternal-soft);color:#2c5986;border-color:#b5d0eb}
+.day.holiday{background:var(--holiday-soft);color:#943d50;border-color:#efb8c2}
+.day.custom{border-style:dashed;box-shadow:inset 0 0 0 2px #d399a8}
+.day.selecting{box-shadow:inset 0 0 0 2px #18303b,0 0 0 2px #7acfc4;z-index:1}
+.day.today{outline:2px solid var(--accent);outline-offset:2px}
+.legend{padding-top:2px}
+.presenting{background:#f8faf9}
+.presenting .topbar{background:transparent;border-color:transparent;box-shadow:none}
+.presenting .month{box-shadow:0 4px 14px #18303b0c}
+@media(max-width:850px){.controls{position:static}.topbar{background:var(--paper)}}
+@media(max-width:650px){.day{min-height:34px;font-size:12px}.month{padding:10px}.month h2{margin:-10px -10px 9px;padding:9px 10px}.calendar-shell{padding:12px}}
 </style>
 </head>
 <body>
