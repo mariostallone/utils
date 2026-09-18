@@ -44,7 +44,7 @@
 .presenting .month{box-shadow:0 4px 14px #18303b0c}
 @media(max-width:850px){.controls{position:static}.topbar{background:var(--paper)}}
 @media(max-width:650px){.day{min-height:34px;font-size:12px}.month{padding:10px}.month h2{margin:-10px -10px 9px;padding:9px 10px}.calendar-shell{padding:12px}}
-.button{display:inline-flex;align-items:center;gap:7px}.icon{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}.button.danger .icon{color:var(--holiday)}
+.button{display:inline-flex;align-items:center;gap:7px}.button.icon-only{width:36px;padding:9px;justify-content:center}.icon{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}.button.danger .icon{color:var(--holiday)}
 .actions{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;max-width:100%;min-width:0;padding-bottom:3px;scrollbar-width:thin}.actions .button{flex:0 0 auto;white-space:nowrap}
 </style>
 </head>
@@ -67,7 +67,7 @@
       <div class="year-nav"><button id="prevRange" aria-label="Previous date range">‹</button><span class="year-label" id="yearLabel"></span><button id="nextRange" aria-label="Next date range">›</button></div>
     </div>
     <div class="actions">
-      <button class="button" id="undo" disabled><svg class="icon" aria-hidden="true"><use href="#icon-undo"></use></svg>Undo</button><button class="button" id="redo" disabled><svg class="icon" aria-hidden="true"><use href="#icon-redo"></use></svg>Redo</button><button class="button" id="printPlan"><svg class="icon" aria-hidden="true"><use href="#icon-print"></use></svg>Print / PDF</button>
+      <button class="button icon-only" id="undo" title="Undo" aria-label="Undo" disabled><svg class="icon" aria-hidden="true"><use href="#icon-undo"></use></svg></button><button class="button icon-only" id="redo" title="Redo" aria-label="Redo" disabled><svg class="icon" aria-hidden="true"><use href="#icon-redo"></use></svg></button><button class="button icon-only" id="printPlan" title="Print or save as PDF" aria-label="Print or save as PDF"><svg class="icon" aria-hidden="true"><use href="#icon-print"></use></svg></button>
       <button class="button" id="presentation"><svg class="icon" aria-hidden="true"><use href="#icon-present"></use></svg>Presentation mode</button>
       <button class="button" id="exportData"><svg class="icon" aria-hidden="true"><use href="#icon-export"></use></svg>Export backup</button>
       <button class="button" id="importData"><svg class="icon" aria-hidden="true"><use href="#icon-import"></use></svg>Import backup</button>
