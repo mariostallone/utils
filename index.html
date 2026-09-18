@@ -44,9 +44,19 @@
 .presenting .month{box-shadow:0 4px 14px #18303b0c}
 @media(max-width:850px){.controls{position:static}.topbar{background:var(--paper)}}
 @media(max-width:650px){.day{min-height:34px;font-size:12px}.month{padding:10px}.month h2{margin:-10px -10px 9px;padding:9px 10px}.calendar-shell{padding:12px}}
+.button{display:inline-flex;align-items:center;gap:7px}.icon{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}.button.danger .icon{color:var(--holiday)}
 </style>
 </head>
 <body>
+<svg aria-hidden="true" width="0" height="0" style="position:absolute"><defs>
+ <symbol id="icon-undo" viewBox="0 0 24 24"><path d="M9 7 4 12l5 5"/><path d="M4 12h10a6 6 0 0 1 6 6"/></symbol>
+ <symbol id="icon-redo" viewBox="0 0 24 24"><path d="m15 7 5 5-5 5"/><path d="M20 12H10a6 6 0 0 0-6 6"/></symbol>
+ <symbol id="icon-print" viewBox="0 0 24 24"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></symbol>
+ <symbol id="icon-present" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
+ <symbol id="icon-export" viewBox="0 0 24 24"><path d="M12 3v12M7 8l5-5 5 5"/><path d="M5 13v7h14v-7"/></symbol>
+ <symbol id="icon-import" viewBox="0 0 24 24"><path d="M12 15V3m5 7-5 5-5-5"/><path d="M5 13v7h14v-7"/></symbol>
+ <symbol id="icon-reset" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.7L4 8.5"/><path d="M4 4v4.5h4.5"/></symbol>
+</defs></svg>
 <main class="app" id="app">
   <header class="topbar">
     <div>
@@ -56,11 +66,11 @@
       <div class="year-nav"><button id="prevRange" aria-label="Previous date range">‹</button><span class="year-label" id="yearLabel"></span><button id="nextRange" aria-label="Next date range">›</button></div>
     </div>
     <div class="actions">
-      <button class="button" id="undo" disabled>Undo</button><button class="button" id="redo" disabled>Redo</button><button class="button" id="printPlan">Print / PDF</button>
-      <button class="button" id="presentation">Presentation mode</button>
-      <button class="button" id="exportData">Export backup</button>
-      <button class="button" id="importData">Import backup</button>
-      <button class="button danger" id="resetYear">Reset year</button>
+      <button class="button" id="undo" disabled><svg class="icon" aria-hidden="true"><use href="#icon-undo"></use></svg>Undo</button><button class="button" id="redo" disabled><svg class="icon" aria-hidden="true"><use href="#icon-redo"></use></svg>Redo</button><button class="button" id="printPlan"><svg class="icon" aria-hidden="true"><use href="#icon-print"></use></svg>Print / PDF</button>
+      <button class="button" id="presentation"><svg class="icon" aria-hidden="true"><use href="#icon-present"></use></svg>Presentation mode</button>
+      <button class="button" id="exportData"><svg class="icon" aria-hidden="true"><use href="#icon-export"></use></svg>Export backup</button>
+      <button class="button" id="importData"><svg class="icon" aria-hidden="true"><use href="#icon-import"></use></svg>Import backup</button>
+      <button class="button danger" id="resetYear"><svg class="icon" aria-hidden="true"><use href="#icon-reset"></use></svg>Reset year</button>
       <input type="file" id="fileInput" accept="application/json" hidden>
     </div>
   </header>
