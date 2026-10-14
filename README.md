@@ -8,7 +8,7 @@ A collection of small, self-contained utilities. Each util is a single HTML file
 | --- | --- | --- |
 | Vacation Planner | [`vacation_planner/index.html`](vacation_planner/index.html) | Plan PTO, work-from-abroad (WFA) and paternal leave on a yearly calendar. |
 
-> The root [`index.html`](index.html) is an earlier copy of the Vacation Planner. The maintained version lives in `vacation_planner/`.
+The root [`index.html`](index.html) is a browsable landing page that links to each util.
 
 ## Vacation Planner
 
@@ -36,4 +36,4 @@ Note that data is stored per browser and per origin, so a plan created at a `fil
 
 ## Adding a util
 
-Create a new directory containing a self-contained `index.html`, then add it to the table above.
+Create a new directory containing a self-contained `index.html`, then add it to the table above and to the `UTILS` list in the root `index.html`.
