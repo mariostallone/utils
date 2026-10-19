@@ -1,12 +1,13 @@
 # utils
 
-A collection of small, self-contained utilities. Each util is a single HTML file with no build step, no dependencies and no network access — open it in a browser and it works offline.
+A collection of small, self-contained utilities. Each util is a single HTML file with no build step — open it in a browser. Most work fully offline; House Builder loads three.js, jsPDF and fonts from a CDN, so it needs a network connection.
 
 ## Utilities
 
 | Util | Path | Description |
 | --- | --- | --- |
 | Vacation Planner | [`vacation_planner/index.html`](vacation_planner/index.html) | Plan PTO, work-from-abroad (WFA) and paternal leave on a yearly calendar. |
+| House Builder | [`home_builder/index.html`](home_builder/index.html) | Sketch floor plans, furnish rooms and view the house in 3D. |
 
 The root [`index.html`](index.html) is a browsable landing page that links to each util.
 
