@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>utils</title>
+<style>
+:root{--ink:#18303b;--muted:#6f8188;--line:#dce7e8;--paper:#fff;--canvas:#f4f8f7;--accent:#147d72;--accent-soft:#dff3ef;--shadow:0 12px 35px #18303b12}
+@media (prefers-color-scheme:dark){:root{--ink:#e3eeee;--muted:#8fa3a9;--line:#27393f;--paper:#16252a;--canvas:#0f1b1f;--accent:#3fc2b2;--accent-soft:#1b3a39;--shadow:0 12px 35px #0006}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.wrap{max-width:960px;margin:auto;padding:48px 24px}
+.eyebrow{margin:0 0 4px;color:var(--accent);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:11px}
+h1{margin:0;font-size:36px;font-weight:800}
+.lead{margin:8px 0 28px;color:var(--muted);max-width:60ch}
+.search{width:100%;max-width:360px;padding:10px 14px;border:1px solid var(--line);border-radius:10px;background:var(--paper);font:inherit;color:inherit;margin-bottom:20px}
+.search:focus{outline:2px solid var(--accent);outline-offset:1px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;list-style:none;margin:0;padding:0}
+.card{display:flex;flex-direction:column;gap:10px;height:100%;padding:22px;background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);color:inherit;text-decoration:none;transition:transform .15s,border-color .15s}
+.card:hover,.card:focus-visible{transform:translateY(-2px);border-color:var(--accent);outline:0}
+.icon{width:44px;height:44px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-size:22px}
+.card h2{margin:0;font-size:18px}
+.card p{margin:0;color:var(--muted);flex:1}
+.tags{display:flex;gap:6px;flex-wrap:wrap}
+.tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.open{font-weight:700;color:var(--accent)}
+.empty{display:none;color:var(--muted)}
+footer{margin-top:40px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <p class="eyebrow">Small tools</p>
+  <h1>utils</h1>
+  <p class="lead">Self-contained utilities that run entirely in your browser. No installs, no accounts, and your data stays on your device.</p>
+  <input class="search" type="search" id="q" placeholder="Filter utils…" aria-label="Filter utils">
+  <ul class="grid" id="grid"></ul>
+  <p class="empty" id="empty">No utils match your filter.</p>
+  <footer>To add a util, put a self-contained <code>index.html</code> in its own folder and add an entry to the <code>UTILS</code> list in this page.</footer>
+</main>
+<script>
+const UTILS = [
+  {
+    name: "Vacation Planner",
+    path: "vacation_planner/",
+    icon: "🏖️",
+    description: "Plan PTO, work-from-abroad and paternal leave on a yearly calendar, with holiday calendars, PTO rollover and shareable images.",
+    tags: ["planning", "calendar", "offline"]
+  },
+  {
+    name: "Stay Planner",
+    path: "stay_planner/",
+    icon: "🧭",
+    description: "Mark which place you'll be at on each day, with emoji places, trips, and a balance that keeps two homes even.",
+    tags: ["planning", "calendar", "travel", "offline"]
+  },
+  {
+    name: "House Builder",
+    path: "home_builder/",
+    icon: "🏠",
+    description: "Sketch a floor plan, furnish the rooms and walk through the result in 3D, with multiple levels and PDF export.",
+    tags: ["design", "floor plan", "3D"]
+  }
+];
+
+const grid = document.getElementById("grid");
+const empty = document.getElementById("empty");
+
+function render(filter = "") {
+  const f = filter.trim().toLowerCase();
+  grid.textContent = "";
+  const matches = UTILS.filter(u => !f || [u.name, u.description, ...u.tags].join(" ").toLowerCase().includes(f));
+  for (const u of matches) {
+    const li = document.createElement("li");
+    const a = document.createElement("a");
+    a.className = "card";
+    a.href = u.path;
+    const icon = Object.assign(document.createElement("div"), { className: "icon", textContent: u.icon });
+    icon.setAttribute("aria-hidden", "true");
+    const h = Object.assign(document.createElement("h2"), { textContent: u.name });
+    const p = Object.assign(document.createElement("p"), { textContent: u.description });
+    const tags = Object.assign(document.createElement("div"), { className: "tags" });
+    for (const t of u.tags) tags.append(Object.assign(document.createElement("span"), { className: "tag", textContent: t }));
+    const open = Object.assign(document.createElement("span"), { className: "open", textContent: "Open →" });
+    a.append(icon, h, p, tags, open);
+    li.append(a);
+    grid.append(li);
+  }
+  empty.style.display = matches.length ? "none" : "block";
+}
+
+document.getElementById("q").addEventListener("input", e => render(e.target.value));
+render();
+</script>
+</body>
+</html>
