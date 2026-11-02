@@ -22,7 +22,8 @@ A yearly calendar for planning time off against your allowance.
 - **Public holidays:** built-in holiday calendars for Germany (nationwide or per federal state), the United Kingdom (England & Wales) and the United States. You can also add custom holidays.
 - **Suggest days:** get suggestions for which days to take off, with a preview you can accept or exit.
 - **Undo** for edits, and an editable plan title.
-- **Export / print:** save the plan as JSON or print it.
+- **Preview & share:** a clean view of the calendar for screenshots and emails. Choose a subset of dates to show, and turn the carryover highlight on or off. Then copy the view as an image to paste into an email, download it as a PNG, or print / save it as a PDF. Images always use the light colour scheme and are sized to the months shown.
+- **Export / print:** save the plan as JSON or print it. Printing also respects the carryover-highlight setting.
 - **Local storage:** your plan is saved in the browser's `localStorage`; nothing leaves your machine. Light and dark colour schemes are supported.
 
 ### Usage
