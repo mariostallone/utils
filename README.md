@@ -49,6 +49,17 @@ A calendar for planning where you'll be on each day of a visit, and for keeping 
 - **Stays:** each run of days at one place is listed; click one to select it.
 - **Undo**, an editable title, JSON export and import, printing, `localStorage` saving and light and dark colour schemes, as in Vacation Planner.
 
+## Live site and PR previews
+
+The [`Pages` workflow](.github/workflows/pages.yml) publishes the repo with GitHub Pages:
+
+- `main` is published at `https://mariostallone.github.io/utils/`.
+- Every pull request gets its own preview at `https://mariostallone.github.io/utils/pr-preview/pr-<number>/`. The preview updates on each push, a comment on the PR links to it, and it's removed when the PR is closed or merged.
+
+One-time setup: once the workflow has run and created the `gh-pages` branch, go to **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, and pick `gh-pages` with the `/ (root)` folder.
+
+Data is stored per origin, so plans saved on the live site, on a preview or in a local file are kept separately.
+
 ## Adding a util
 
 Create a new directory containing a self-contained `index.html`, then add it to the table above and to the `UTILS` list in the root `index.html`.
