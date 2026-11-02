@@ -32,7 +32,7 @@ jobs:
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Deploy main to the site root
         uses: JamesIves/github-pages-deploy-action@v4
         with:
@@ -48,7 +48,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Deploy or remove the PR preview
         uses: rossjrw/pr-preview-action@v1
         with:
