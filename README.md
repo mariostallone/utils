@@ -7,6 +7,7 @@ A collection of small, self-contained utilities. Each util is a single HTML file
 | Util | Path | Description |
 | --- | --- | --- |
 | Vacation Planner | [`vacation_planner/index.html`](vacation_planner/index.html) | Plan PTO, work-from-abroad (WFA) and paternal leave on a yearly calendar. |
+| Stay Planner | [`stay_planner/index.html`](stay_planner/index.html) | Mark where you'll stay each day and keep time at two homes balanced. |
 | House Builder | [`home_builder/index.html`](home_builder/index.html) | Sketch floor plans, furnish rooms and view the house in 3D. |
 
 The root [`index.html`](index.html) is a browsable landing page that links to each util.
@@ -34,6 +35,17 @@ python3 -m http.server 8000
 ```
 
 Note that data is stored per browser and per origin, so a plan created at a `file://` URL won't appear when served from `localhost`.
+
+## Stay Planner
+
+A calendar for planning where you'll be on each day of a visit, and for keeping the time split fairly between two homes (for example, your place and your partner's).
+
+- **Places with emoji:** starts with two places, BLR 🏙️ (yours) and TUT 🌴 (your partner's). Add more places, such as trips, each with its own emoji (pick one or type any emoji) and colour. Click a place to edit or delete it.
+- **Whose place:** each place belongs to you, your partner, or neither (a trip). Set both names under *Who's who*.
+- **Mark days:** click a day, or drag or Shift-click to select a range, then pick a place. Number keys `1`–`9` pick a place, `N` creates a new place for the selection, and `C` clears it.
+- **Counts and balance:** day counts per place, plus a balance between the two of you that shows who is ahead, by how many days, and what it takes to finish even with the unplanned days left. Counts cover either the dates in view (set the range to your trip) or all time.
+- **Stays:** each run of days at one place is listed; click one to select it.
+- **Undo**, an editable title, JSON export and import, printing, `localStorage` saving and light and dark colour schemes, as in Vacation Planner.
 
 ## Adding a util
 
