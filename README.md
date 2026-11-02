@@ -42,7 +42,8 @@ A calendar for planning where you'll be on each day of a visit, and for keeping 
 
 - **Places with emoji:** starts with two places, BLR 🏙️ (yours) and TUT 🌴 (your partner's). Add more places, such as trips, each with its own emoji (pick one or type any emoji) and colour. Click a place to edit or delete it.
 - **Whose place:** each place belongs to you, your partner, or neither (a trip). Set both names under *Who's who*.
-- **Mark days:** click a day, or drag or Shift-click to select a range, then pick a place. Number keys `1`–`9` pick a place, `N` creates a new place for the selection, and `C` clears it.
+- **Mark days:** click a day, or drag or Shift-click to select a range, then pick a place. Number keys `1`–`9` pick a place, `N` creates a new place for the selection, `F` marks the days as flights, and `C` clears them.
+- **Flights:** mark travel days as ✈️ Flight. They show on the calendar and in the stays list, but don't count toward any place's total or the balance, and aren't counted as unplanned.
 - **Counts and balance:** day counts per place, plus a balance between the two of you that shows who is ahead, by how many days, and what it takes to finish even with the unplanned days left. Counts cover either the dates in view (set the range to your trip) or all time.
 - **Stays:** each run of days at one place is listed; click one to select it.
 - **Undo**, an editable title, JSON export and import, printing, `localStorage` saving and light and dark colour schemes, as in Vacation Planner.

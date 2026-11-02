@@ -12,7 +12,7 @@
   --accent:#0f766e;--accent-hover:#0b5f58;--accent-soft:#e1f2ee;--on-accent:#fff;
   --weekend:#ebeee9;--weekend-ink:#97a2a4;
   --danger:#c2364f;--danger-soft:#fde7eb;--good:#3aa877;
-  --p0:#0f766e;--p1:#d0731a;--p2:#3a62b8;--p3:#c23d64;--p4:#7650c4;--p5:#3f8f3a;--p6:#a8820c;--p7:#5b6b73;
+  --flight:#64748b;--p0:#0f766e;--p1:#d0731a;--p2:#3a62b8;--p3:#c23d64;--p4:#7650c4;--p5:#3f8f3a;--p6:#a8820c;--p7:#5b6b73;
   --shadow-sm:0 1px 2px rgb(22 35 42/.06);
   --shadow:0 1px 2px rgb(22 35 42/.04),0 6px 22px rgb(22 35 42/.06);
   --shadow-lg:0 2px 6px rgb(22 35 42/.08),0 22px 50px rgb(22 35 42/.18);
@@ -26,7 +26,7 @@
   --accent:#2fb3a4;--accent-hover:#45c6b7;--accent-soft:#143a36;--on-accent:#071513;
   --weekend:#192226;--weekend-ink:#5d6c73;
   --danger:#ef7186;--danger-soft:#42161f;
-  --p0:#2fb3a4;--p1:#e3913a;--p2:#6f95e6;--p3:#e7728a;--p4:#a483ec;--p5:#6cc35f;--p6:#d9b53d;--p7:#94a5ad;
+  --flight:#9aa8bb;--p0:#2fb3a4;--p1:#e3913a;--p2:#6f95e6;--p3:#e7728a;--p4:#a483ec;--p5:#6cc35f;--p6:#d9b53d;--p7:#94a5ad;
   --shadow-sm:0 1px 2px rgb(0 0 0/.3);--shadow:0 1px 2px rgb(0 0 0/.25),0 8px 24px rgb(0 0 0/.25);--shadow-lg:0 24px 60px rgb(0 0 0/.55);
 }}
 *,*::before,*::after{box-sizing:border-box}
@@ -189,6 +189,7 @@ details[open]>summary .icon{transform:rotate(90deg)}
 button.day:hover{border-color:var(--line-strong)}
 .day.is-weekend{background:var(--weekend);color:var(--weekend-ink)}
 .day.has-place{font-weight:700}
+.day.is-flight{background-image:repeating-linear-gradient(-45deg,transparent 0 4px,color-mix(in srgb,var(--c) 14%,transparent) 4px 8px)}
 .day.has-place.tint{background:color-mix(in srgb,var(--c) 20%,var(--surface))}
 .day.is-out{background:transparent;color:var(--line-strong);font-weight:500}
 .day.is-past:not(.has-place):not(.is-selected){opacity:.55}
@@ -512,7 +513,7 @@ function normalizeState(raw) {
     const seen = new Set();
     s.places = [];
     for (const p of raw.places) {
-      if (!p || typeof p.id !== "string" || !p.id || seen.has(p.id) || s.places.length >= MAX_PLACES) continue;
+      if (!p || typeof p.id !== "string" || !p.id || p.id === FLIGHT_ID || seen.has(p.id) || s.places.length >= MAX_PLACES) continue;
       seen.add(p.id);
       s.places.push({
         id: p.id.slice(0, 40),
@@ -524,12 +525,17 @@ function normalizeState(raw) {
     }
   }
   const ids = new Set(s.places.map(p => p.id));
-  for (const [k, v] of Object.entries(raw.days || {})) if (isValidKey(k) && ids.has(v)) s.days[k] = v;
+  for (const [k, v] of Object.entries(raw.days || {})) if (isValidKey(k) && (ids.has(v) || v === FLIGHT_ID)) s.days[k] = v;
   return s;
 }
 
 let state = defaultState();
 const placeById = id => state.places.find(p => p.id === id) || null;
+/** Flights are a built-in day type: they mark travel days and never count toward anyone's totals. */
+const FLIGHT_ID = "flight";
+const FLIGHT = { id: FLIGHT_ID, name: "Flight", emoji: "✈️", side: null };
+const markById = id => id === FLIGHT_ID ? FLIGHT : placeById(id);
+const colorFor = p => p.id === FLIGHT_ID ? "var(--flight)" : colorVar(p.color);
 const sideName = side => (side ? state.sides[side] : "") || (side === "a" ? "Me" : side === "b" ? "Partner" : "");
 
 /* ================= Persistence ================= */
@@ -610,14 +616,15 @@ const rangeLength = () => dayDiff(parseKey(state.rangeStart), parseKey(state.ran
 function tally() {
   const per = Object.fromEntries(state.places.map(p => [p.id, 0]));
   const side = { a: 0, b: 0, "": 0 };
-  let planned = 0;
+  let planned = 0, flights = 0;
   for (const [k, id] of Object.entries(state.days)) {
     if (!inScope(k)) continue;
+    if (id === FLIGHT_ID) { flights++; continue; }
     const p = placeById(id);
     if (!p) continue;
     per[id]++; side[p.side]++; planned++;
   }
-  return { per, side, planned };
+  return { per, side, planned, flights };
 }
 
 /* ================= Rendering ================= */
@@ -684,7 +691,8 @@ function renderPlaces(t) {
   }).join("") : `<li class="empty">No places yet.</li>`;
   $("addPlaceBtn").disabled = state.places.length >= MAX_PLACES;
   $("legend").innerHTML = state.places.map(p =>
-    `<span><i class="sw tint em" style="--c:${colorVar(p.color)}">${esc(p.emoji)}</i>${esc(p.name)}</span>`).join("") || `<span>Add a place to start planning</span>`;
+    `<span><i class="sw tint em" style="--c:${colorVar(p.color)}">${esc(p.emoji)}</i>${esc(p.name)}</span>`).join("") +
+    `<span title="Travel days don't count toward anyone's totals"><i class="sw tint em" style="--c:var(--flight)">${FLIGHT.emoji}</i>Flight (not counted)</span>`;
 }
 
 /** Consecutive days at the same place, in date order. */
@@ -702,8 +710,8 @@ function renderStays() {
   const list = stays();
   $("stayCount").textContent = list.length ? plural(list.length, "stay") : "";
   $("stays").innerHTML = list.length ? list.map(s => {
-    const p = placeById(s.id), d = parseKey(s.from);
-    return `<li><button type="button" data-from="${s.from}" data-to="${s.to}" style="--c:${colorVar(p.color)}">` +
+    const p = markById(s.id), d = parseKey(s.from);
+    return `<li><button type="button" data-from="${s.from}" data-to="${s.to}" style="--c:${colorFor(p)}">` +
       `<i class="bar-c"></i><i class="em" style="font-size:17px">${esc(p.emoji)}</i>` +
       `<span style="min-width:0"><span class="when">${fmtRange(s.from, s.to)}${yearOf(s.from) !== new Date().getFullYear() && yearOf(s.from) === yearOf(s.to) ? ` ${yearOf(s.from)}` : ""}</span>` +
       `<span class="what">${esc(p.name)} · from ${WEEKDAYS_LONG[d.getDay()]}</span></span>` +
@@ -730,7 +738,7 @@ function renderBalance(t) {
   const A = t.side.a, B = t.side.b, total = A + B, diff = A - B;
   const colorOf = side => colorVar(state.places.find(p => p.side === side)?.color ?? (side === "a" ? 0 : 1));
   let verdict, advice = "";
-  const unplanned = state.scope === "range" ? rangeLength() - t.planned : null;
+  const unplanned = state.scope === "range" ? rangeLength() - t.planned - t.flights : null;
   if (!total) {
     verdict = `<p class="verdict">Nothing planned yet</p>`;
     advice = `Select days on the calendar and choose where you'll be.`;
@@ -756,6 +764,7 @@ function renderBalance(t) {
   const other = t.side[""];
   const bits = [`<span><b>${t.planned}</b> ${t.planned === 1 ? "day" : "days"} planned${state.scope === "range" ? ` of <b>${rangeLength()}</b> in view` : " in total"}</span>`];
   if (other) bits.push(`<span><b>${other}</b> on trips &amp; other places</span>`);
+  if (t.flights) bits.push(`<span>✈️ <b>${t.flights}</b> ${t.flights === 1 ? "flight day" : "flight days"} (not counted)</span>`);
   if (unplanned != null) bits.push(`<span><b>${unplanned}</b> unplanned</span>`);
   $("balanceFoot").innerHTML = bits.join("");
 }
@@ -772,15 +781,15 @@ function renderCalendar() {
     for (let day = 1; day <= daysInMonth(y, mo); day++) {
       const d = new Date(y, mo, day), k = keyOf(d);
       if (!inRange(k)) { cells += `<span class="day is-out">${day}</span>`; continue; }
-      const p = placeById(state.days[k]);
+      const p = markById(state.days[k]);
       if (p) counts.set(p.id, (counts.get(p.id) || 0) + 1);
-      const cls = ["day", isWeekend(d) && "is-weekend", p && "has-place tint", k < tk && "is-past", k === tk && "is-today"].filter(Boolean).join(" ");
+      const cls = ["day", isWeekend(d) && "is-weekend", p && "has-place tint", p === FLIGHT && "is-flight", k < tk && "is-past", k === tk && "is-today"].filter(Boolean).join(" ");
       const label = `${fmtLong(d)}${p ? `, ${p.name}` : ""}`;
       cells += `<button type="button" class="${cls}" data-date="${k}" data-focus-key="day:${k}" tabindex="${k === rovingKey ? 0 : -1}"` +
-        `${p ? ` style="--c:${colorVar(p.color)}"` : ""} aria-label="${esc(label)}"><span class="dn">${day}</span>${p ? `<i class="em" aria-hidden="true">${esc(p.emoji)}</i>` : ""}</button>`;
+        `${p ? ` style="--c:${colorFor(p)}"` : ""} aria-label="${esc(label)}"><span class="dn">${day}</span>${p ? `<i class="em" aria-hidden="true">${esc(p.emoji)}</i>` : ""}</button>`;
     }
-    const tags = state.places.filter(p => counts.get(p.id)).map(p =>
-      `<span class="month-tag tint" style="--c:${colorVar(p.color)}" title="${esc(p.name)}"><i class="em">${esc(p.emoji)}</i>${counts.get(p.id)}</span>`).join("");
+    const tags = [...state.places, FLIGHT].filter(p => counts.get(p.id)).map(p =>
+      `<span class="month-tag tint" style="--c:${colorFor(p)}" title="${esc(p.name)}"><i class="em">${esc(p.emoji)}</i>${counts.get(p.id)}</span>`).join("");
     html += `<article class="month"><header class="month-head"><h3>${MONTHS[mo]}<span>${y}</span></h3><div class="month-tags">${tags}</div></header>` +
       `<div class="grid" role="group" aria-label="${MONTHS[mo]} ${y}">${weekdayRow}${cells}</div></article>`;
   }
@@ -824,7 +833,7 @@ function openTools(x, y, { fromKeyboard = false } = {}) {
   const assigned = dates.some(k => state.days[k]);
   const single = dates.length === 1 ? parseKey(dates[0]) : null;
   const head = single
-    ? `<strong>${fmtLong(single)}</strong><span>${current ? esc(placeById(current).name) : "Nothing planned"}</span>`
+    ? `<strong>${fmtLong(single)}</strong><span>${current ? esc(markById(current).name) : "Nothing planned"}</span>`
     : `<strong>${fmtRange(dates[0], dates.at(-1))}</strong><span>${plural(dates.length, "day")}</span>`;
   const btns = state.places.map((p, i) => {
     const already = dates.filter(k => state.days[k] === p.id).length;
@@ -834,6 +843,7 @@ function openTools(x, y, { fromKeyboard = false } = {}) {
   tools.innerHTML =
     `<div class="tools-head"><div>${head}</div><button type="button" class="btn ghost small icon-only" data-tool="close" aria-label="Close">${icon("x")}</button></div>` +
     `<div class="tools-grid">${btns}` +
+      `<button type="button" class="tool${current === FLIGHT_ID ? " current" : ""}" data-tool="${FLIGHT_ID}" style="--c:var(--flight)"><i class="em">${FLIGHT.emoji}</i><span class="lbl">Flight<small>Travel day · not counted</small></span><kbd>F</kbd></button>` +
       `<button type="button" class="tool" data-tool="new" style="--c:var(--accent)"${state.places.length >= MAX_PLACES ? " disabled" : ""}><i class="em">➕</i><span class="lbl">New place…<small>Add a trip or home</small></span><kbd>N</kbd></button>` +
       `<button type="button" class="tool" data-tool="clear" style="--c:var(--muted)"${assigned ? "" : " disabled"}><i class="em">🧹</i><span class="lbl">Clear<small>Unplan these days</small></span><kbd>C</kbd></button>` +
     `</div>` +
@@ -892,7 +902,7 @@ function assign(id) {
   pushHistory(before);
   commit();
   if (keyboard) focusDay(focusKey);
-  const p = placeById(id);
+  const p = markById(id);
   toast(p ? `${p.emoji} ${p.name} · ${plural(changed, "day")}` : `Cleared ${plural(changed, "day")}`, { undo: true });
 }
 
@@ -1153,7 +1163,8 @@ document.addEventListener("keydown", e => {
     const key = e.key.toLowerCase();
     let b = null;
     if (/^[1-9]$/.test(key)) b = tools.querySelectorAll(".tool[data-tool]")[Number(key) - 1];
-    if (b && ["new", "clear"].includes(b.dataset.tool)) b = null;
+    if (b && ["new", "clear", FLIGHT_ID].includes(b.dataset.tool)) b = null;
+    if (key === "f") b = tools.querySelector(`[data-tool="${FLIGHT_ID}"]`);
     if (key === "n") b = tools.querySelector('[data-tool="new"]');
     if (key === "c") b = tools.querySelector('[data-tool="clear"]');
     if (b && !b.disabled) { e.preventDefault(); b.click(); }
