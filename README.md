@@ -56,7 +56,7 @@ The [`Pages` workflow](.github/workflows/pages.yml) publishes the repo with GitH
 - `main` is published at `https://mariostallone.github.io/utils/`.
 - Every pull request gets its own preview at `https://mariostallone.github.io/utils/pr-preview/pr-<number>/`. The preview updates on each push, a comment on the PR links to it, and it's removed when the PR is closed or merged.
 
-One-time setup: once the workflow has run and created the `gh-pages` branch, go to **Settings → Pages → Build and deployment**, choose **Deploy from a branch**, and pick `gh-pages` with the `/ (root)` folder.
+One-time setup: after this workflow is merged and has run on `main` (which fills the `gh-pages` branch with the site), go to **Settings → Pages → Build and deployment** and change the branch from `main` to `gh-pages`, folder `/ (root)`. Don't switch earlier: until `main` has been deployed, `gh-pages` holds only previews and the site root would be empty.
 
 Data is stored per origin, so plans saved on the live site, on a preview or in a local file are kept separately.
 

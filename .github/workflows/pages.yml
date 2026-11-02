@@ -5,8 +5,8 @@
 #
 # The preview is (re)deployed on every push to the PR, linked in a comment on the PR,
 # and removed when the PR is closed or merged. Both jobs publish to the `gh-pages` branch.
-# One-time setup: Settings -> Pages -> Build and deployment -> "Deploy from a branch",
-# branch `gh-pages`, folder `/ (root)`.
+# One-time setup, after this has run on main: Settings -> Pages -> Build and deployment ->
+# "Deploy from a branch", switch the branch from `main` to `gh-pages`, folder `/ (root)`.
 name: Pages
 
 on:
