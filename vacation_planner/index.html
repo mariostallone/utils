@@ -254,7 +254,18 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
 .toast{position:fixed;left:50%;bottom:22px;z-index:60;display:none;align-items:center;gap:14px;padding:10px 12px 10px 16px;transform:translateX(-50%);border-radius:12px;background:#16232a;color:#fff;box-shadow:var(--shadow-lg);font-size:13.5px;max-width:calc(100vw - 24px)}
 .toast.show{display:flex}
 .toast button{padding:4px 10px;border-radius:7px;background:rgb(255 255 255/.14);color:#fff;font-weight:700}
-.exit-preview{position:fixed;right:20px;bottom:20px;z-index:50;display:none}
+/* ---------- Share bar (preview mode) ---------- */
+.share-bar{display:none;align-items:center;gap:10px 16px;flex-wrap:wrap;margin-bottom:16px;padding:10px 12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.presenting .share-bar{display:flex}
+.share-group{display:flex;align-items:center;gap:7px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+.share-group b{color:var(--ink-2);font-weight:700}
+.share-group input[type="date"]{height:32px;padding:0 8px;border:1px solid var(--line);border-radius:8px;background:var(--surface-2);font-size:13px}
+.share-bar .check{align-items:center}
+.share-bar .check input{margin:0}
+.share-actions{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+/* Carryover highlight can be hidden for screenshots, images and print */
+.presenting.hide-carry .day.is-carry::after,.presenting.hide-carry .day.is-deadline::before,.presenting.hide-carry .lg-carry{display:none}
+.capturing .share-bar{display:none!important}
 
 /* ---------- Preview mode ---------- */
 .presenting .sidebar,.presenting .toolbar,.presenting .chips,.presenting .range-custom,.presenting .range-nav .btn,.presenting .alerts,.presenting .stats,.presenting .sel-info{display:none!important}
@@ -262,7 +273,6 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
 .presenting .title-input{pointer-events:none}
 .presenting .rangebar{padding:0;background:transparent;border-color:transparent;box-shadow:none}
 .presenting .range-title{text-align:left;min-width:0}
-.presenting .exit-preview{display:inline-flex}
 .presenting button.day{cursor:default}
 .presenting button.day:hover{border-color:transparent}
 
@@ -271,6 +281,7 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
 @media (max-width:980px){.layout{grid-template-columns:1fr}.sidebar{position:static;max-height:none;overflow:visible}.range-custom{margin-left:0}}
 @media (max-width:640px){
   .app{padding:16px 16px 48px}
+  .share-actions{margin-left:0}
   .topbar{flex-wrap:wrap}
   .brand-mark{display:none}
   .title-input{font-size:22px}
@@ -291,7 +302,8 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
 @media print{
   body{background:#fff}
   .app{max-width:none;padding:0}
-  .sidebar,.toolbar,.chips,.range-custom,.range-nav .btn,.alerts,.sel-info,.exit-preview,.tools,.toast{display:none!important}
+  .sidebar,.toolbar,.chips,.range-custom,.range-nav .btn,.alerts,.sel-info,.share-bar,.tools,.toast{display:none!important}
+  .hide-carry .day.is-carry::after,.hide-carry .day.is-deadline::before,.hide-carry .lg-carry{display:none}
   .layout{display:block}
   .panel,.stat,.rangebar,.month{box-shadow:none}
   .rangebar{border:0;padding:0}
@@ -321,6 +333,8 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
   <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
   <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/><path d="M19 17v4M17 19h4"/></symbol>
   <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18M6 6l12 12"/></symbol>
+  <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.8"/><path d="m21 16-5-5-9 9"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1"/></symbol>
   <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/><circle cx="12" cy="15.5" r="1.3"/></symbol>
 </defs></svg>
 
@@ -338,7 +352,7 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
         <button class="btn icon-only" id="undoBtn" aria-label="Undo" disabled><svg class="icon"><use href="#i-undo"/></svg></button>
         <button class="btn icon-only" id="redoBtn" aria-label="Redo" disabled><svg class="icon"><use href="#i-redo"/></svg></button>
       </div>
-      <button class="btn" id="previewBtn"><svg class="icon"><use href="#i-eye"/></svg><span>Preview</span></button>
+      <button class="btn" id="previewBtn" title="Preview the calendar to share it as an image, screenshot or PDF"><svg class="icon"><use href="#i-eye"/></svg><span>Preview &amp; share</span></button>
       <div class="menu-wrap">
         <button class="btn icon-only" id="moreBtn" aria-label="More actions" aria-haspopup="menu" aria-expanded="false"><svg class="icon"><use href="#i-more"/></svg></button>
         <div class="menu" id="menu" role="menu">
@@ -352,6 +366,22 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
       <input type="file" id="fileInput" accept="application/json,.json" hidden>
     </div>
   </header>
+
+  <section class="share-bar" id="shareBar" aria-label="Share options">
+    <div class="share-group">
+      <b>Show</b>
+      <label for="shareStart">from</label><input type="date" id="shareStart">
+      <label for="shareEnd">to</label><input type="date" id="shareEnd">
+      <button type="button" class="btn small ghost" id="shareReset">Whole plan</button>
+    </div>
+    <label class="check"><input type="checkbox" id="shareCarry"><span>Highlight carryover days</span></label>
+    <div class="share-actions">
+      <button type="button" class="btn small" id="copyImage"><svg class="icon"><use href="#i-copy"/></svg>Copy image</button>
+      <button type="button" class="btn small" id="saveImage"><svg class="icon"><use href="#i-image"/></svg>Download PNG</button>
+      <button type="button" class="btn small" id="sharePrint"><svg class="icon"><use href="#i-print"/></svg>Print / PDF</button>
+      <button type="button" class="btn small primary" id="exitPreview">Exit preview</button>
+    </div>
+  </section>
 
   <section class="rangebar" aria-label="Date range">
     <div class="range-nav">
@@ -428,7 +458,7 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
             <span><i class="sw" style="background:var(--pat-soft);border-color:var(--pat-line)"></i>Paternal leave</span>
             <span><i class="sw" style="background:var(--hol-soft);border-color:var(--hol-line)"></i>Public holiday</span>
             <span><i class="sw" style="background:var(--hol-soft);border:1px dashed var(--hol)"></i>Company holiday</span>
-            <span><i class="sw carry"></i>Uses carryover</span>
+            <span class="lg-carry"><i class="sw carry"></i>Uses carryover</span>
             <span><i class="sw" style="background:var(--weekend)"></i>Weekend</span>
           </div>
           <span class="sel-info" id="selInfo" aria-live="polite"></span>
@@ -440,7 +470,6 @@ kbd{padding:2px 5px;border:1px solid var(--line);border-bottom-width:2px;border-
 </div>
 
 <div class="tools" id="tools" role="dialog" aria-label="Plan selected days"></div>
-<button class="btn primary exit-preview" id="exitPreview">Exit preview</button>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -507,7 +536,7 @@ const icon = name => `<svg class="icon" aria-hidden="true"><use href="#i-${name}
 function defaultState() {
   const y = new Date().getFullYear();
   return {
-    version: 2, title: "My Vacation Plan", country: "DE", region: "", observed: false,
+    version: 2, title: "My Vacation Plan", country: "DE", region: "", observed: false, shareCarry: true,
     rangeStart: `${y}-01-01`, rangeEnd: `${y}-12-31`,
     carryover: { enabled: true, month: 3, day: 31 },
     years: {}
@@ -527,6 +556,7 @@ function normalizeState(raw) {
   if (["DE", "US", "GB"].includes(raw.country)) s.country = raw.country;
   if (s.country === "DE" && REGION_CODES.includes(raw.region)) s.region = raw.region;
   s.observed = !!raw.observed;
+  s.shareCarry = raw.shareCarry !== false;
   const legacyYear = clampInt(raw.year, 1970, 2200, null);
   if (isValidKey(raw.rangeStart)) s.rangeStart = raw.rangeStart; else if (legacyYear) s.rangeStart = `${legacyYear}-01-01`;
   if (isValidKey(raw.rangeEnd)) s.rangeEnd = raw.rangeEnd; else if (legacyYear) s.rangeEnd = `${legacyYear}-12-31`;
@@ -748,8 +778,13 @@ function presetRange(p) {
   const s = new Date(now.getFullYear(), now.getMonth(), 1);
   return [keyOf(s), keyOf(new Date(s.getFullYear(), s.getMonth() + 12, 0))];
 }
-function rangeTitle() {
-  const s = parseKey(state.rangeStart), e = parseKey(state.rangeEnd), sameYear = s.getFullYear() === e.getFullYear();
+/** The dates the calendar shows: the plan range, or the chosen subset while previewing. */
+const share = { start: null, end: null };
+function viewRange() {
+  return isPresenting() && share.start ? [share.start, share.end] : [state.rangeStart, state.rangeEnd];
+}
+function rangeTitle([a, b] = viewRange()) {
+  const s = parseKey(a), e = parseKey(b), sameYear = s.getFullYear() === e.getFullYear();
   const aligned = s.getDate() === 1 && e.getDate() === daysInMonth(e.getFullYear(), e.getMonth());
   if (!aligned) return `${fmtDay(s, !sameYear)} – ${fmtDay(e, true)}`;
   if (sameYear && s.getMonth() === 0 && e.getMonth() === 11) return String(s.getFullYear());
@@ -794,7 +829,11 @@ function renderHeader() {
   if (document.activeElement !== $("titleInput")) $("titleInput").value = state.title;
   document.title = `${state.title || "Vacation plan"} · Vacation Planner`;
   $("rangeLabel").textContent = rangeTitle();
-  $("rangeSub").textContent = plural(dayDiff(parseKey(state.rangeStart), parseKey(state.rangeEnd)) + 1, "day");
+  const [vs, ve] = viewRange();
+  $("rangeSub").textContent = plural(dayDiff(parseKey(vs), parseKey(ve)) + 1, "day");
+  document.body.classList.toggle("hide-carry", !state.shareCarry);
+  $("shareCarry").checked = state.shareCarry;
+  if (share.start) { $("shareStart").value = share.start; $("shareEnd").value = share.end; }
   $("rangeStart").value = state.rangeStart;
   $("rangeEnd").value = state.rangeEnd;
   document.querySelectorAll("[data-preset]").forEach(b => {
@@ -962,7 +1001,8 @@ function renderStats() {
 }
 
 function renderCalendar() {
-  const s = parseKey(state.rangeStart), e = parseKey(state.rangeEnd), tk = todayKey(), co = state.carryover;
+  const [vs, ve] = viewRange();
+  const s = parseKey(vs), e = parseKey(ve), tk = todayKey(), co = state.carryover;
   const focusKey = [sel.focus, rovingKey, tk].find(k => k && inRange(k)) || state.rangeStart;
   rovingKey = focusKey;
   const weekdayRow = `<span class="wk-h" aria-hidden="true">${state.country === "DE" ? "KW" : "Wk"}</span>` +
@@ -1187,9 +1227,91 @@ function setMenu(open, returnFocus = false) {
   else if (returnFocus) $("moreBtn").focus();
 }
 function setPresenting(on) {
+  if (on) { closeTools(true); share.start = state.rangeStart; share.end = state.rangeEnd; }
   document.body.classList.toggle("presenting", on);
-  $("previewBtn").querySelector("span").textContent = on ? "Exit preview" : "Preview";
-  if (on) closeTools(true);
+  $("previewBtn").querySelector("span").textContent = on ? "Exit preview" : "Preview & share";
+  render();
+}
+/** Sets the previewed subset. Moving one end past the other moves the other end with it; spans are capped at 3 years. */
+function setShareRange(a, b, moved) {
+  if (!isValidKey(a) || !isValidKey(b)) return render();
+  if (a > b) { if (moved === "start") b = a; else a = b; }
+  const max = keyOf(addDays(parseKey(`${yearOf(a) + 3}${a.slice(4)}`), -1));
+  if (b > max) b = max;
+  share.start = a; share.end = b;
+  render();
+}
+
+/* ================= Image export ================= */
+/**
+ * Draws the previewed calendar to a PNG without any library: the page is cloned into an SVG
+ * <foreignObject> with the page's own stylesheet (light colours), then rasterised on a canvas at 2x.
+ */
+async function snapshotBlob() {
+  document.activeElement?.blur?.();
+  document.body.classList.add("capturing");
+  try {
+    const app = document.querySelector(".app"), rect = app.getBoundingClientRect();
+    // Fit the image to the months shown (up to 4 per row) instead of the window, so it suits an email.
+    // Stay above 640px: media queries inside the SVG image see its width, and the phone layout would differ.
+    const cols = Math.min(4, document.querySelectorAll("#months .month").length || 1);
+    const w = Math.ceil(Math.min(rect.width, Math.max(700, cols * 240 + (cols - 1) * 12 + 90)));
+    app.style.width = `${w}px`;
+    const h = Math.ceil(app.scrollHeight), scale = 2;
+    const clone = app.cloneNode(true);
+    clone.querySelectorAll(".share-bar,.sidebar,.alerts,.stats,.toolbar,.chips,.range-custom").forEach(el => el.remove());
+    const title = clone.querySelector("#titleInput");
+    if (title) { const div = document.createElement("div"); div.className = "title-input"; div.textContent = state.title; title.replaceWith(div); }
+    clone.querySelectorAll("[id]").forEach(el => el.removeAttribute("id"));
+    const css = [...document.querySelectorAll("style")].map(x => x.textContent).join("\n")
+      .replace(/@media \(prefers-color-scheme:dark\)\{:root\{[\s\S]*?\}\}/, "");
+    const wrap = document.createElement("div");
+    wrap.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
+    wrap.className = document.body.className;
+    wrap.setAttribute("style", `width:${w}px;min-height:${h}px;background:var(--bg);color:var(--ink);font:14px/1.45 var(--font)`);
+    const styleEl = document.createElement("style");
+    styleEl.textContent = css;
+    wrap.append(styleEl);
+    wrap.insertAdjacentHTML("beforeend", document.querySelector("body > svg").outerHTML);
+    wrap.append(clone);
+    const xml = new XMLSerializer().serializeToString(wrap);
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><foreignObject x="0" y="0" width="100%" height="100%">${xml}</foreignObject></svg>`;
+    const img = new Image();
+    img.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+    await img.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = w * scale; canvas.height = h * scale;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return await new Promise((res, rej) => canvas.toBlob(b => b ? res(b) : rej(new Error("no image")), "image/png"));
+  } finally {
+    document.querySelector(".app").style.width = "";
+    document.body.classList.remove("capturing");
+  }
+}
+const imageName = () => `${slug(state.title) || "vacation-plan"}-${share.start || state.rangeStart}-to-${share.end || state.rangeEnd}.png`;
+function downloadBlob(blob, name) {
+  const url = URL.createObjectURL(blob), a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+const IMAGE_FAIL = "This browser can't create the image. Take a screenshot or use Print / PDF instead.";
+async function saveImage() {
+  try { downloadBlob(await snapshotBlob(), imageName()); toast("Image downloaded"); }
+  catch { toast(IMAGE_FAIL, { ms: 5000 }); }
+}
+async function copyImage() {
+  const blob = snapshotBlob();
+  try {
+    if (!navigator.clipboard?.write || typeof ClipboardItem === "undefined") throw new Error("no clipboard");
+    // Pass the promise straight to ClipboardItem so Safari keeps the user gesture.
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+    toast("Image copied — paste it into your email");
+  } catch {
+    try { downloadBlob(await blob, imageName()); toast("Couldn't copy, so the image was downloaded instead"); }
+    catch { toast(IMAGE_FAIL, { ms: 5000 }); }
+  }
 }
 function exportPlan() {
   const data = { ...JSON.parse(snapshot()), exportedAt: new Date().toISOString() };
@@ -1427,6 +1549,13 @@ $("undoBtn").title = `Undo (${MOD}Z)`;
 $("redoBtn").title = `Redo (${MOD === "⌘" ? "⇧⌘Z" : "Ctrl+Y"})`;
 $("previewBtn").addEventListener("click", () => setPresenting(!isPresenting()));
 $("exitPreview").addEventListener("click", () => setPresenting(false));
+$("shareStart").addEventListener("change", e => setShareRange(e.target.value, share.end, "start"));
+$("shareEnd").addEventListener("change", e => setShareRange(share.start, e.target.value, "end"));
+$("shareReset").addEventListener("click", () => setShareRange(state.rangeStart, state.rangeEnd));
+$("shareCarry").addEventListener("change", e => { state.shareCarry = e.target.checked; save(); render(); });
+$("copyImage").addEventListener("click", copyImage);
+$("saveImage").addEventListener("click", saveImage);
+$("sharePrint").addEventListener("click", () => window.print());
 $("moreBtn").addEventListener("click", () => setMenu(!$("menu").classList.contains("open")));
 $("menu").addEventListener("click", e => {
   const b = e.target.closest("[data-menu]");

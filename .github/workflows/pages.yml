@@ -1,0 +1,54 @@
+# Publishes the utils to GitHub Pages, with a live preview for every pull request.
+#
+#   main          -> https://<owner>.github.io/<repo>/
+#   pull request  -> https://<owner>.github.io/<repo>/pr-preview/pr-<number>/
+#
+# The preview is (re)deployed on every push to the PR, linked in a comment on the PR,
+# and removed when the PR is closed or merged. Both jobs publish to the `gh-pages` branch.
+# One-time setup, after this has run on main: Settings -> Pages -> Build and deployment ->
+# "Deploy from a branch", switch the branch from `main` to `gh-pages`, folder `/ (root)`.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, synchronize, closed]
+  workflow_dispatch:
+
+permissions:
+  contents: write        # push to the gh-pages branch
+  pull-requests: write   # comment the preview link on the PR
+
+# Deploys all write to gh-pages, so run them one at a time.
+concurrency:
+  group: gh-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy-main:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy main to the site root
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: .
+          branch: gh-pages
+          # Keep the PR previews that live alongside the site.
+          clean-exclude: pr-preview/
+
+  preview:
+    # Fork PRs get a read-only token and can't publish, so only preview branches of this repo.
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy or remove the PR preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: .
+          preview-branch: gh-pages
+          umbrella-dir: pr-preview
+          action: auto
