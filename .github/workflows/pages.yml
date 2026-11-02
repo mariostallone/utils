@@ -20,9 +20,11 @@ permissions:
   contents: write        # push to the gh-pages branch
   pull-requests: write   # comment the preview link on the PR
 
-# Deploys all write to gh-pages, so run them one at a time.
+# One group for main and one per PR. A single shared group would drop runs: GitHub keeps only one
+# pending run per group, so merging a PR (push to main + PR closed) could cancel the main deploy.
+# Runs in different groups can push to gh-pages at the same time; the deploy retries its push for that.
 concurrency:
-  group: gh-pages
+  group: pages-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -38,6 +40,8 @@ jobs:
           branch: gh-pages
           # Keep the PR previews that live alongside the site.
           clean-exclude: pr-preview/
+          # Retry the push if a preview deploy updated gh-pages at the same moment.
+          attempt-limit: 10
 
   preview:
     # Fork PRs get a read-only token and can't publish, so only preview branches of this repo.
